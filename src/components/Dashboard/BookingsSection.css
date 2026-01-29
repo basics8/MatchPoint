@@ -1,0 +1,30 @@
+.bookings-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-height: 200px;
+}
+
+.bookings-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.bookings-content {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+.bookings-link {
+    color: #111827;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.bookings-link:hover {
+    color: #000000;
+}

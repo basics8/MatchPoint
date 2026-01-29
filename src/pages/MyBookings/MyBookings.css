@@ -1,0 +1,193 @@
+.my-bookings-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9fafb;
+}
+
+.my-bookings-main {
+    flex: 1;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    width: 100%;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 24px;
+}
+
+.tabs-header {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 32px;
+}
+
+.tab-btn {
+    padding: 12px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: #111827;
+}
+
+.tab-btn.active {
+    color: #111827;
+    border-bottom-color: #111827;
+}
+
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.booking-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.venue-name-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.venue-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.confirmed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.completed {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.menu-dots {
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.card-details {
+    display: flex;
+    gap: 48px;
+    margin-bottom: 24px;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.booking-id-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.booking-id {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.booking-price {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.card-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-btn.primary {
+    background-color: #000000;
+    color: white;
+    border: none;
+}
+
+.action-btn.primary:hover {
+    background-color: #27272a;
+}
+
+.action-btn.secondary {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.action-btn.secondary:hover {
+    background-color: #f9fafb;
+}
+
+.action-btn.danger {
+    background-color: white;
+    border: 1px solid #fecaca;
+    color: #ef4444;
+}
+
+.action-btn.danger:hover {
+    background-color: #fef2f2;
+}
+
+@media (max-width: 640px) {
+    .card-details {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,289 @@
+.venue-details-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.venue-details-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+    width: 100%;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4b5563;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 24px;
+}
+
+.venue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.venue-title-section h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.venue-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.venue-rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Photo Grid */
+.photo-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.main-photo {
+    grid-row: 1 / span 2;
+}
+
+.photo-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.secondary-photos {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Content Layout */
+.venue-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: start;
+}
+
+/* Left Content */
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.venue-description {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.detail-card {
+    background-color: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.detail-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.amenity-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b5563;
+}
+
+.opening-hours {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+/* Sidebar Booking Widget */
+.booking-widget {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 24px;
+}
+
+.booking-price-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 16px;
+}
+
+.price-large {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.price-unit {
+    color: #6b7280;
+    margin-left: 4px;
+}
+
+.date-selector {
+    margin-bottom: 24px;
+}
+
+.date-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.time-slot-btn {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.time-slot-btn:hover {
+    border-color: #111827;
+}
+
+.time-slot-btn.selected {
+    background-color: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+.checkout-btn {
+    width: 100%;
+    background-color: #000000;
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.checkout-btn:hover {
+    background-color: #27272a;
+}
+
+.cancellation-note {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    margin-top: 12px;
+}
+
+@media (max-width: 1024px) {
+    .venue-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-widget {
+        position: static;
+        margin-top: 48px;
+    }
+
+    .photo-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 200px);
+    }
+
+    .main-photo {
+        grid-row: auto;
+    }
+
+    .secondary-photos {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 200px;
+    }
+}
