@@ -7,6 +7,7 @@ import VenueDetails from './pages/VenueDetails/VenueDetails';
 import Checkout from './pages/Checkout/Checkout';
 import BookingConfirmed from './pages/BookingConfirmed/BookingConfirmed';
 import FindCourts from './pages/FindCourts/FindCourts';
+import AdminOverview from './pages/Admin/AdminOverview';
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/checkout/:id" element={<Checkout />} />
         <Route path="/booking-confirmed/:id" element={<BookingConfirmed />} />
         <Route path="/find-courts" element={<FindCourts />} />
+        <Route path="/admin" element={<AdminOverview />} />
       </Routes>
     </Router>
   );

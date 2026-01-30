@@ -1,14 +1,33 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, MapPin, MoreVertical } from 'lucide-react';
-import { bookings, pastBookings } from '../../data/mockData';
+import { bookings, pastBookings, type Booking } from '../../data/mockData';
 import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
+import RescheduleModal from '../../components/MyBookings/RescheduleModal';
 import './MyBookings.css';
 
 const MyBookings = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('upcoming');
+    const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
+    const handleRescheduleClick = (booking: Booking) => {
+        setSelectedBooking(booking);
+        setIsRescheduleModalOpen(true);
+    };
+
+    const handleConfirmReschedule = (newDate: string, newTime: string) => {
+        // In a real app, this would make an API call
+        console.log(`Rescheduling booking ${selectedBooking?.id} to ${newDate} at ${newTime}`);
+        setIsRescheduleModalOpen(false);
+        setSelectedBooking(null);
+    };
+
+    const handleBookAgain = (venueId: string) => {
+        navigate(`/venue/${venueId}`);
+    };
 
     return (
         <div className="my-bookings-page">
@@ -73,7 +92,7 @@ const MyBookings = () => {
 
                                 <div className="card-actions">
                                     <button className="action-btn primary" onClick={() => navigate(`/booking-confirmed/${booking.id}`)}>View QR Code</button>
-                                    <button className="action-btn secondary">Reschedule</button>
+                                    <button className="action-btn secondary" onClick={() => handleRescheduleClick(booking)}>Reschedule</button>
                                     <button className="action-btn danger">Cancel</button>
                                 </div>
                             </div>
@@ -121,7 +140,7 @@ const MyBookings = () => {
                                 </div>
 
                                 <div className="card-actions">
-                                    <button className="action-btn secondary">Book Again</button>
+                                    <button className="action-btn secondary" onClick={() => handleBookAgain(booking.venueId)}>Book Again</button>
                                 </div>
                             </div>
                         ))}
@@ -130,6 +149,16 @@ const MyBookings = () => {
             </main>
 
             <Footer />
+
+            {selectedBooking && (
+                <RescheduleModal
+                    isOpen={isRescheduleModalOpen}
+                    onClose={() => setIsRescheduleModalOpen(false)}
+                    onConfirm={handleConfirmReschedule}
+                    currentDate={selectedBooking.date}
+                    currentTime={selectedBooking.time}
+                />
+            )}
         </div>
     );
 };

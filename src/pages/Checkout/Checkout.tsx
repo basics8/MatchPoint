@@ -48,6 +48,7 @@ const Checkout = () => {
         // Add new booking to mock data
         bookings.push({
             id: newBookingId,
+            venueId: venue.id,
             venueName: venue.name,
             venueImage: venue.image,
             date: bookingDate,

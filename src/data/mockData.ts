@@ -74,6 +74,7 @@ export const venues: Venue[] = [
 
 export interface Booking {
     id: string;
+    venueId: string; // Added for navigation
     venueName: string;
     venueImage?: string;
     date: string;
@@ -88,6 +89,7 @@ export interface Booking {
 export const bookings: Booking[] = [
     {
         id: 'BK001',
+        venueId: '1', // Elite Padel Club
         venueName: 'Elite Padel Club',
         venueImage: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=1000',
         date: '2025-12-10',
@@ -100,6 +102,7 @@ export const bookings: Booking[] = [
     },
     {
         id: 'BK003',
+        venueId: '3', // Urban Badminton Arena
         venueName: 'Urban Badminton Arena',
         venueImage: 'https://images.unsplash.com/photo-1626224583764-847890e0b1bd?auto=format&fit=crop&q=80&w=1000',
         date: '2025-12-08',
@@ -115,6 +118,7 @@ export const bookings: Booking[] = [
 export const pastBookings: Booking[] = [
     {
         id: 'BK002',
+        venueId: '2', // Metropolitan Tennis Center
         venueName: 'Metropolitan Tennis Center',
         venueImage: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&q=80&w=1000',
         date: '2025-11-28',
@@ -127,6 +131,7 @@ export const pastBookings: Booking[] = [
     },
     {
         id: 'BK004',
+        venueId: '5', // Premier Tennis Academy
         venueName: 'Premier Tennis Academy',
         venueImage: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=1000',
         date: '2025-11-15',
