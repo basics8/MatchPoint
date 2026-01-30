@@ -1,0 +1,171 @@
+.add-user-btn {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-user-btn:hover {
+    background-color: #374151;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 32px;
+}
+
+.search-input-full {
+    width: 100%;
+    padding: 12px 12px 12px 48px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #111827;
+    outline: none;
+}
+
+.search-input-full::placeholder {
+    color: #9ca3af;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* Extending VenueTable shared styles */
+.venue-table-container {
+    background-color: white;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.venue-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.venue-table th {
+    background-color: #000000;
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 16px 24px;
+}
+
+.venue-table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    font-size: 0.875rem;
+    vertical-align: middle;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.user-name-text {
+    font-weight: 500;
+    color: #111827;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.contact-text {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.contact-text.text-gray {
+    color: #9ca3af;
+}
+
+.spent-amount {
+    font-weight: 600;
+    color: #111827;
+}
+
+.action-menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.action-menu-btn:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Dropdown Menu */
+.action-dropdown {
+    position: absolute;
+    right: 24px;
+    /* Align with right edge of action column roughly */
+    top: 50px;
+    /* Below the button */
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    min-width: 160px;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.dropdown-item:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}

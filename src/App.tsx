@@ -8,6 +8,11 @@ import Checkout from './pages/Checkout/Checkout';
 import BookingConfirmed from './pages/BookingConfirmed/BookingConfirmed';
 import FindCourts from './pages/FindCourts/FindCourts';
 import AdminOverview from './pages/Admin/AdminOverview';
+import VenueManagement from './pages/Admin/VenueManagement';
+import BookingManagement from './pages/Admin/BookingManagement';
+import UserManagement from './pages/Admin/UserManagement';
+import FinancialReports from './pages/Admin/FinancialReports';
+import AdminSettings from './pages/Admin/AdminSettings';
 import './App.css';
 
 function App() {
@@ -23,6 +28,11 @@ function App() {
         <Route path="/booking-confirmed/:id" element={<BookingConfirmed />} />
         <Route path="/find-courts" element={<FindCourts />} />
         <Route path="/admin" element={<AdminOverview />} />
+        <Route path="/admin/venues" element={<VenueManagement />} />
+        <Route path="/admin/bookings" element={<BookingManagement />} />
+        <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/financial" element={<FinancialReports />} />
+        <Route path="/admin/settings" element={<AdminSettings />} />
       </Routes>
     </Router>
   );

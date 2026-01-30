@@ -1,6 +1,7 @@
 .admin-layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     background-color: #f9fafb;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -37,6 +38,7 @@
     flex-direction: column;
     padding: 0 12px;
     gap: 4px;
+    overflow-y: auto;
 }
 
 .nav-item {
@@ -114,6 +116,14 @@
     padding: 24px 32px;
     background-color: #ffffff;
     border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
 }
 
 .breadcrumbs {

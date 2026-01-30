@@ -7,9 +7,10 @@ interface AdminLayoutProps {
     children: ReactNode;
     title?: string;
     breadcrumbs?: string[];
+    actions?: ReactNode;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs }) => {
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs, actions }) => {
     return (
         <div className="admin-layout">
             <aside className="admin-sidebar">
@@ -58,15 +59,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs 
 
             <main className="admin-main">
                 <header className="admin-header">
-                    <div className="breadcrumbs">
-                        {breadcrumbs?.map((crumb, index) => (
-                            <span key={index}>
-                                {crumb}
-                                {index < breadcrumbs.length - 1 && <span className="separator">/</span>}
-                            </span>
-                        ))}
+                    <div className="header-left">
+                        <div className="breadcrumbs">
+                            {breadcrumbs?.map((crumb, index) => (
+                                <span key={index}>
+                                    {crumb}
+                                    {index < breadcrumbs.length - 1 && <span className="separator">/</span>}
+                                </span>
+                            ))}
+                        </div>
+                        {title && <h2 className="page-heading">{title}</h2>}
                     </div>
-                    {title && <h2 className="page-heading">{title}</h2>}
+                    {actions && <div className="header-actions">{actions}</div>}
                 </header>
                 <div className="admin-content">
                     {children}
