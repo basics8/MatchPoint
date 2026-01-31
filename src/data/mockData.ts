@@ -18,7 +18,7 @@ export const venues: Venue[] = [
         reviews: 234,
         price: 150000,
         sport: 'Padel',
-        image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=1000',
+        image: 'https://images.unsplash.com/photo-1626249591465-4d048126b772?auto=format&fit=crop&q=80&w=1000', // Classic Blue Padel Court
     },
     {
         id: '2',
@@ -28,7 +28,7 @@ export const venues: Venue[] = [
         reviews: 412,
         price: 180000,
         sport: 'Tennis',
-        image: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&q=80&w=1000',
+        image: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&q=80&w=1000', // Orange Clay Court
     },
     {
         id: '3',
@@ -38,7 +38,7 @@ export const venues: Venue[] = [
         reviews: 189,
         price: 80000,
         sport: 'Badminton',
-        image: 'https://images.unsplash.com/photo-1626224583764-847890e0b1bd?auto=format&fit=crop&q=80&w=1000',
+        image: 'https://images.unsplash.com/photo-1626224583764-847890e0b1bd?auto=format&fit=crop&q=80&w=1000', // Professional Green Court
     },
     {
         id: '4',
@@ -48,7 +48,7 @@ export const venues: Venue[] = [
         reviews: 156,
         price: 135000,
         sport: 'Padel',
-        image: 'https://plus.unsplash.com/premium_photo-1676634832558-6654a134e920?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        image: 'https://images.unsplash.com/photo-1669046043132-75d506798c8a?auto=format&fit=crop&q=80&w=1000', // Outdoor Sunny Padel Architecture
     },
     {
         id: '5',
@@ -58,7 +58,7 @@ export const venues: Venue[] = [
         reviews: 287,
         price: 200000,
         sport: 'Tennis',
-        image: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=1000',
+        image: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=1000', // Blue/Green Hard Court
     },
     {
         id: '6',
@@ -68,8 +68,8 @@ export const venues: Venue[] = [
         reviews: 203,
         price: 75000,
         sport: 'Badminton',
-        image: 'https://images.unsplash.com/photo-1613918108466-292b78a8ef95?auto=format&fit=crop&q=80&w=1000',
-    }
+        image: 'https://images.unsplash.com/photo-1522856425330-3c224213d2b0?auto=format&fit=crop&q=80&w=1000', // Wood flooring/Indoor Hall
+    },
 ];
 
 export interface Booking {
