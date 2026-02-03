@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import './VenueManagement.css';
@@ -14,21 +14,42 @@ interface CourtData {
 }
 
 const VenueManagement = () => {
-    // Mock Data based on the new image provided
-    const [courts, setCourts] = useState<CourtData[]>([
-        { id: 1, name: 'Elite Padel Club - Court A', sport: 'Padel', location: 'Downtown', status: 'Active', hourlyRate: 150000, isAvailable: true },
-        { id: 2, name: 'Elite Padel Club - Court B', sport: 'Padel', location: 'Downtown', status: 'Maintenance', hourlyRate: 150000, isAvailable: true },
-        { id: 3, name: 'Metropolitan Tennis Center - Court 1', sport: 'Tennis', location: 'Midtown', status: 'Active', hourlyRate: 180000, isAvailable: true },
-        { id: 4, name: 'Metropolitan Tennis Center - Court 2', sport: 'Tennis', location: 'Midtown', status: 'Active', hourlyRate: 180000, isAvailable: false },
-        { id: 5, name: 'Urban Badminton Arena - Court 1', sport: 'Badminton', location: 'Sports District', status: 'Active', hourlyRate: 80000, isAvailable: true },
-        { id: 6, name: 'Urban Badminton Arena - Court 2', sport: 'Badminton', location: 'Sports District', status: 'Active', hourlyRate: 80000, isAvailable: true },
-        { id: 7, name: 'Riverside Padel Courts - Court A', sport: 'Padel', location: 'East Side', status: 'Active', hourlyRate: 135000, isAvailable: true },
-        { id: 8, name: 'Premier Tennis Academy - Court 1', sport: 'Tennis', location: 'North Quarter', status: 'Active', hourlyRate: 200000, isAvailable: true },
-        { id: 9, name: 'Premier Tennis Academy - Court 2', sport: 'Tennis', location: 'North Quarter', status: 'Active', hourlyRate: 200000, isAvailable: true },
-        { id: 10, name: 'CityCenter Badminton Club - Court 1', sport: 'Badminton', location: 'Central', status: 'Active', hourlyRate: 75000, isAvailable: true },
-    ]);
+    // State for venues
+    const [courts, setCourts] = useState<CourtData[]>([]);
+
+    useEffect(() => {
+        fetchVenues();
+    }, []);
+
+    const fetchVenues = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('/api/admin/venues', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // Map backend data to frontend interface
+                const mappedData: CourtData[] = data.map((venue: any) => ({
+                    id: venue.id,
+                    name: venue.name,
+                    sport: venue.sport || 'Tennis', // default or correct
+                    location: venue.location || 'Main',
+                    status: 'Active', // Default for now as backend model doesn't have status yet
+                    hourlyRate: venue.price || 0,
+                    isAvailable: true // Default
+                }));
+                setCourts(mappedData);
+            }
+        } catch (error) {
+            console.error("Error fetching venues:", error);
+        } finally {
+            // Loading handled silently for now
+        }
+    };
 
     const toggleAvailability = (id: number) => {
+        // Implement API call for update here later
         setCourts(courts.map(court => {
             if (court.id === id) {
                 const newAvailability = !court.isAvailable;

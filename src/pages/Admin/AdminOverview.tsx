@@ -1,18 +1,91 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { DollarSign, Users, Calendar, TrendingUp } from 'lucide-react';
 import './AdminOverview.css';
 
 const AdminOverview = () => {
-    // Mock Data for the chart
-    const dataPoints = [45, 52, 48, 61, 55, 67, 73, 69, 78, 82, 89, 96];
+    // Stats State
+    const [stats, setStats] = useState({
+        totalRevenue: 0,
+        totalUsers: 0,
+        totalBookings: 0,
+        activeVenues: 0 // We might need to add this to backend response or calculate
+    });
+
+    // Chart Data State
+    const [chartData, setChartData] = useState<number[]>(new Array(12).fill(0));
+    const [maxChartVal, setMaxChartVal] = useState(100);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch('/api/admin/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setStats({
+                        totalRevenue: data.totalRevenue || 0,
+                        totalUsers: data.totalUsers || 0,
+                        totalBookings: data.totalBookings || 0,
+                        activeVenues: data.totalVenues || 0
+                    });
+
+                    // Process Revenue Chart Data
+                    if (data.revenueOverTime) {
+                        const newChartData = new Array(12).fill(0);
+                        let maxRevenue = 0;
+
+                        data.revenueOverTime.forEach((item: any) => {
+                            // item.month is 1-12. Array index 0-11.
+                            // item.totalAmount is in Rupiah (e.g. 150000)
+                            const monthIndex = item.month - 1;
+                            if (monthIndex >= 0 && monthIndex < 12) {
+                                // Scale down for chart (e.g., / 1000 for display consistency with prior mockup logic)
+                                // Prior logic: val 45 -> Display 45.000.
+                                // So val = realAmount / 1000.
+                                const val = parseInt(item.totalAmount) / 1000;
+                                newChartData[monthIndex] = val;
+                                if (val > maxRevenue) maxRevenue = val;
+                            }
+                        });
+                        setChartData(newChartData);
+                        // Update max scale to fit data, with some buffer. Min 100.
+                        setMaxChartVal(Math.max(100, Math.ceil(maxRevenue / 10) * 10 + 20));
+                    }
+
+                    if (data.recentActivity) {
+                        const activity = data.recentActivity.map((item: any) => ({
+                            id: item.id,
+                            user: item.user?.username || 'Unknown User',
+                            action: `Booked ${item.venue?.name || 'Venue'}`,
+                            time: timeAgo(item.created_at || item.createdAt), // Handle both cases just in case
+                            amount: `+Rp ${parseInt(item.totalPrice).toLocaleString('id-ID')}`,
+                            initials: (item.user?.username || 'U').substring(0, 2).toUpperCase(),
+                            profileImage: item.user?.profileImage
+                        }));
+                        setRecentActivity(activity);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
+    const dataPoints = chartData;
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     // State for tooltip
     const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; value: number; month: string } | null>(null);
 
     // Generate SVG path for the line chart
-    const maxVal = 100;
+    const maxVal = maxChartVal;
     const width = 1000;
     const height = 300;
     const padding = 40;
@@ -23,14 +96,26 @@ const AdminOverview = () => {
         return `${x},${y}`;
     }).join(' ');
 
-    const recentActivity = [
-        { id: 1, user: 'Sarah Johnson', action: 'Booked Tennis Court #3', time: '5 min ago', amount: '+Rp 65.000', initials: 'SJ' },
-        { id: 2, user: 'Mike Chen', action: 'Cancelled Badminton Court #1', time: '12 min ago', amount: '-Rp 45.000', initials: 'MC' },
-        { id: 3, user: 'Emma Wilson', action: 'Booked Padel Court #2', time: '23 min ago', amount: '+Rp 85.000', initials: 'EW' },
-        { id: 4, user: 'David Brown', action: 'Booked Tennis Court #1', time: '34 min ago', amount: '+Rp 65.000', initials: 'DB' },
-        { id: 5, user: 'Lisa Anderson', action: 'Booked Badminton Court #4', time: '1 hour ago', amount: '+Rp 45.000', initials: 'LA' },
-        { id: 6, user: 'James Taylor', action: 'Booked Tennis Court #5', time: '2 hours ago', amount: '+Rp 65.000', initials: 'JT' },
-    ];
+    const [recentActivity, setRecentActivity] = useState<any[]>([]);
+
+    // Helper to format time relative (e.g., "5 min ago")
+    const timeAgo = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + " years ago";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + " months ago";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + " days ago";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + " hours ago";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + " min ago";
+        return Math.floor(seconds) + " sec ago";
+    };
 
     return (
         <AdminLayout title="Admin Overview" breadcrumbs={['Dashboard', 'Overview']}>
@@ -47,7 +132,7 @@ const AdminOverview = () => {
                     </div>
                     <div className="stats-info">
                         <span className="stats-label">Total Revenue</span>
-                        <h3 className="stats-value">Rp 847.392.000</h3>
+                        <h3 className="stats-value">Rp {stats.totalRevenue.toLocaleString('id-ID')}</h3>
                     </div>
                 </div>
 
@@ -62,7 +147,7 @@ const AdminOverview = () => {
                     </div>
                     <div className="stats-info">
                         <span className="stats-label">Active Users</span>
-                        <h3 className="stats-value">12,458</h3>
+                        <h3 className="stats-value">{stats.totalUsers.toLocaleString('id-ID')}</h3>
                     </div>
                 </div>
 
@@ -77,7 +162,7 @@ const AdminOverview = () => {
                     </div>
                     <div className="stats-info">
                         <span className="stats-label">Total Bookings</span>
-                        <h3 className="stats-value">3,842</h3>
+                        <h3 className="stats-value">{stats.totalBookings.toLocaleString('id-ID')}</h3>
                     </div>
                 </div>
 
@@ -92,7 +177,7 @@ const AdminOverview = () => {
                     </div>
                     <div className="stats-info">
                         <span className="stats-label">Active Venues</span>
-                        <h3 className="stats-value">124</h3>
+                        <h3 className="stats-value">{stats.activeVenues}</h3>
                     </div>
                 </div>
             </div>
@@ -186,7 +271,11 @@ const AdminOverview = () => {
                     {recentActivity.map(item => (
                         <div key={item.id} className="activity-item">
                             <div className="activity-left">
-                                <div className="activity-avatar">{item.initials}</div>
+                                {item.profileImage ? (
+                                    <img src={item.profileImage} alt={item.user} className="activity-avatar" style={{ objectFit: 'cover' }} />
+                                ) : (
+                                    <div className="activity-avatar">{item.initials}</div>
+                                )}
                                 <div className="activity-details">
                                     <span className="activity-user">{item.user}</span>
                                     <span className="activity-action">{item.action}</span>

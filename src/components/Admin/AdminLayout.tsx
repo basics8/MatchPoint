@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import { LayoutDashboard, Store, Calendar, Users, DollarSign, Settings } from 'lucide-react';
+import { LayoutDashboard, Store, Calendar, Users, DollarSign, Settings, ExternalLink } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import './AdminLayout.css';
 
@@ -47,12 +47,49 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs,
                 </nav>
 
                 <div className="sidebar-footer">
+                    <NavLink to="/home" className="view-site-btn">
+                        <ExternalLink size={18} />
+                        <span>View User Site</span>
+                    </NavLink>
+
                     <div className="admin-profile">
-                        <div className="avatar-placeholder">AD</div>
-                        <div className="admin-info">
-                            <span className="admin-name">Admin User</span>
-                            <span className="admin-email">admin@matchpoint.com</span>
-                        </div>
+                        {(() => {
+                            try {
+                                const userStr = localStorage.getItem('user');
+                                const user = userStr ? JSON.parse(userStr) : null;
+                                const initials = user?.username ? user.username.substring(0, 2).toUpperCase() : 'AD';
+                                const name = user?.username || 'Admin User';
+                                const email = user?.email || 'admin@matchpoint.com'; // Admin api might return email now if we added it, but model only has username/password. AuthController returns username.
+
+                                return (
+                                    <>
+                                        {user?.profileImage ? (
+                                            <img
+                                                src={user.profileImage}
+                                                alt="Admin"
+                                                className="avatar-placeholder"
+                                                style={{ objectFit: 'cover', padding: 0, overflow: 'hidden' }}
+                                            />
+                                        ) : (
+                                            <div className="avatar-placeholder">{initials}</div>
+                                        )}
+                                        <div className="admin-info">
+                                            <span className="admin-name">{name}</span>
+                                            <span className="admin-email">{email}</span>
+                                        </div>
+                                    </>
+                                );
+                            } catch (e) {
+                                return (
+                                    <>
+                                        <div className="avatar-placeholder">AD</div>
+                                        <div className="admin-info">
+                                            <span className="admin-name">Admin</span>
+                                        </div>
+                                    </>
+                                );
+                            }
+                        })()}
                     </div>
                 </div>
             </aside>

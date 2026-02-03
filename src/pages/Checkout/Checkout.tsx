@@ -1,11 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, MapPin, Calendar, Clock, CreditCard, Smartphone } from 'lucide-react';
 import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
-import { venues, bookings } from '../../data/mockData';
 import { ImageWithFallback } from '../../components/VenueCard';
 import './Checkout.css';
+
+interface Venue {
+    id: string; // or number
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    price: number;
+    sport: 'Padel' | 'Tennis' | 'Badminton';
+    image: string;
+    description?: string;
+}
 
 const Checkout = () => {
     const navigate = useNavigate();
@@ -13,8 +24,25 @@ const Checkout = () => {
     const location = useLocation();
     const locationState = location.state as { date?: string; time?: string } | null;
 
-    // Find venue by ID or default to first if not found (for safety)
-    const venue = venues.find(v => v.id === id) || venues[0];
+    const [venue, setVenue] = useState<Venue | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchVenue = async () => {
+            try {
+                const response = await fetch(`/api/venues/${id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setVenue(data);
+                }
+            } catch (error) {
+                console.error("Error fetching venue:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (id) fetchVenue();
+    }, [id]);
 
     const [racketCount, setRacketCount] = useState(0);
     const [ballSetCount, setBallSetCount] = useState(0);
@@ -23,6 +51,9 @@ const Checkout = () => {
     // Use passed date/time or defaults
     const bookingDate = locationState?.date || '2025-11-02';
     const bookingTime = locationState?.time || '10:00';
+
+    if (loading) return <div>Loading...</div>;
+    if (!venue) return <div>Venue not found</div>;
 
     const prices = {
         court: venue.price,
@@ -41,26 +72,47 @@ const Checkout = () => {
         }).format(price);
     };
 
-    const handleConfirmBooking = () => {
-        // Generate a random ID for the new booking
-        const newBookingId = 'MP' + Math.floor(Math.random() * 1000000);
+    const handleConfirmBooking = async () => {
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            alert("Please login to book a court.");
+            navigate('/');
+            return;
+        }
+        const user = JSON.parse(userStr);
 
-        // Add new booking to mock data
-        bookings.push({
-            id: newBookingId,
+        const bookingData = {
             venueId: venue.id,
-            venueName: venue.name,
-            venueImage: venue.image,
+            registerId: user.id,
             date: bookingDate,
             time: bookingTime,
             sport: venue.sport,
             status: 'Confirmed',
-            price: total,
-            location: venue.location,
-            duration: '1 hour'
-        });
+            totalPrice: total,
+            duration: '1 hour',
+            bookerType: user.roles || 'user'
+        };
 
-        navigate(`/booking-confirmed/${newBookingId}`);
+        try {
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (response.ok) {
+                const savedBooking = await response.json();
+                navigate(`/booking-confirmed/${savedBooking.id}`);
+            } else {
+                const errorData = await response.json();
+                alert(`Booking failed: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error("Error creating booking:", error);
+            alert("An error occurred while creating booking.");
+        }
     };
 
     return (

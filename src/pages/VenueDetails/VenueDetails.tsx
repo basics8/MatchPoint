@@ -1,28 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Star, MapPin, Wifi, Car, Droplets, ShoppingBag, Coffee, Clock } from 'lucide-react';
 import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
-import { venues } from '../../data/mockData';
 import { ImageWithFallback } from '../../components/VenueCard';
 import './VenueDetails.css';
+
+interface Venue {
+    id: string; // or number
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    price: number;
+    sport: 'Padel' | 'Tennis' | 'Badminton';
+    image: string;
+    description?: string;
+}
 
 const VenueDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [selectedDate, setSelectedDate] = useState<string>('');
+    const [venue, setVenue] = useState<Venue | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    // Find venue or use default if not found
-    const venue = venues.find(v => v.id === id) || venues[0];
+    useEffect(() => {
+        const fetchVenue = async () => {
+            try {
+                const response = await fetch(`/api/venues/${id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setVenue(data);
+                } else {
+                    console.error("Venue not found");
+                }
+            } catch (error) {
+                console.error("Error fetching venue:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    // Extended mock data specific to this page view
-    const description = "Premium padel facility with state-of-the-art courts and modern amenities. Perfect for both competitive play and casual matches.";
-    const surfaceType = venue.sport === 'Padel' ? 'Artificial Grass' : 'Hard Court';
+        if (id) fetchVenue();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="venue-details-page">
+                <Navbar />
+                <div style={{ padding: '100px', textAlign: 'center' }}>Loading venue details...</div>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (!venue) {
+        return (
+            <div className="venue-details-page">
+                <Navbar />
+                <div style={{ padding: '100px', textAlign: 'center' }}>Venue not found.</div>
+                <Footer />
+            </div>
+        );
+    }
+
+    // Extended data (static/generated based on venue)
+    const description = venue.description || "Premium facility with state-of-the-art courts and modern amenities. Perfect for both competitive play and casual matches.";
+    const surfaceType = venue.sport === 'Padel' ? 'Artificial Grass' : venue.sport === 'Tennis' ? 'Hard Court' : 'Rubber Mat';
     const images = [
         venue.image,
-        'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=1000',
-        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=1000',
+        'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=1000', // Placeholder
+        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=1000', // Placeholder
     ];
 
     const timeSlots = [
@@ -54,7 +104,7 @@ const VenueDetails = () => {
                         <h1>{venue.name}</h1>
                         <div className="venue-location">
                             <MapPin size={16} />
-                            <span>{venue.location} • Downtown</span>
+                            <span>{venue.location}</span>
                         </div>
                     </div>
                     <div className="venue-rating-badge">
@@ -91,7 +141,7 @@ const VenueDetails = () => {
                                 </div>
                                 <div className="detail-card">
                                     <span className="detail-label">Location</span>
-                                    <span className="detail-value">Outdoor</span>
+                                    <span className="detail-value">Indoor/Outdoor</span>
                                 </div>
                                 <div className="detail-card">
                                     <span className="detail-label">Price</span>

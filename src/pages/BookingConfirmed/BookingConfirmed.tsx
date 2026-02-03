@@ -1,26 +1,51 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { Check, Calendar, Download, Home } from 'lucide-react';
 import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
-import { bookings, pastBookings } from '../../data/mockData';
+// Mock data removed
 import './BookingConfirmed.css';
 
 const BookingConfirmed = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
-    // Find booking in either active or past bookings, or default to a mock one if not found (e.g. fresh checkout)
-    const booking = [...bookings, ...pastBookings].find(b => b.id === id) || {
-        id: id || 'MP62543918',
-        venueName: 'Elite Padel Club',
-        date: '2025-11-02',
-        time: '10:00',
-        sport: 'Padel',
-        status: 'Confirmed',
-        price: 150000,
-        duration: '1 hour',
-        location: '123 Sports Avenue, Downtown'
-    };
+    // For now, since we don't have a state management store for bookings, we'll construct a display object.
+    // In a real app, you might fetch this via ID from the API.
+    const [booking, setBooking] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBooking = async () => {
+            if (!id) return;
+            try {
+                const response = await fetch(`/api/bookings/${id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setBooking({
+                        id: data.id,
+                        venueName: data.venue?.name || 'Unknown Venue',
+                        date: data.date,
+                        time: data.time,
+                        sport: data.sport,
+                        status: data.status,
+                        price: data.totalPrice,
+                        duration: data.duration,
+                        location: data.venue?.location || 'Unknown Location'
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching booking:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBooking();
+    }, [id]);
+
+    if (loading) return <div>Loading...</div>;
+    if (!booking) return <div>Booking not found</div>;
 
     // QR Code API
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.id}`;

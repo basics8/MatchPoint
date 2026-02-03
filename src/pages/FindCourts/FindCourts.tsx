@@ -4,8 +4,19 @@ import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
 import { FilterSidebar } from '../../components/FindCourts/FilterSidebar';
 import { VenueCard } from '../../components/VenueCard';
-import { venues } from '../../data/mockData';
 import './FindCourts.css';
+
+interface Venue {
+    id: string; // or number, backend sends ID usually
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    price: number;
+    sport: 'Padel' | 'Tennis' | 'Badminton';
+    image: string;
+    description?: string;
+}
 
 interface FilterState {
     sport: string;
@@ -17,15 +28,36 @@ interface FilterState {
 
 const FindCourts = () => {
     const [searchParams] = useSearchParams();
+    const [venues, setVenues] = useState<Venue[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // Initial State with URL params support (e.g. ?sport=Padel)
     const [filters, setFilters] = useState<FilterState>({
         sport: searchParams.get('sport') || '',
         minPrice: 0,
-        maxPrice: 300000, // Default max reasonable price
+        maxPrice: 300000,
         locationType: '',
         facilities: []
     });
+
+    // Fetch Venues from API
+    useEffect(() => {
+        const fetchVenues = async () => {
+            try {
+                const response = await fetch('/api/venues');
+                if (response.ok) {
+                    const data = await response.json();
+                    setVenues(data);
+                }
+            } catch (error) {
+                console.error("Error fetching venues:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVenues();
+    }, []);
 
     // Update filters if URL params change
     useEffect(() => {
@@ -58,10 +90,6 @@ const FindCourts = () => {
         if (venue.price < filters.minPrice) return false;
         if (venue.price > filters.maxPrice) return false;
 
-        // Filter by Location Type (Simple substring match for mock data context)
-        // Note: Real app would need structured data for this. 
-        // For now, we'll skip if empty or assume all are matched since mock data lacks this field explicitly/
-
         return true;
     });
 
@@ -73,7 +101,7 @@ const FindCourts = () => {
                 <div className="page-header">
                     <h1 className="page-title">Available Courts</h1>
                     <p className="results-count">
-                        {filteredVenues.length} {filteredVenues.length === 1 ? 'venue' : 'venues'} found
+                        {loading ? 'Loading...' : `${filteredVenues.length} ${filteredVenues.length === 1 ? 'venue' : 'venues'} found`}
                     </p>
                 </div>
 
@@ -87,7 +115,9 @@ const FindCourts = () => {
                     </aside>
 
                     <div className="venues-grid">
-                        {filteredVenues.length > 0 ? (
+                        {loading ? (
+                            <div className="loading-state">Loading venues...</div>
+                        ) : filteredVenues.length > 0 ? (
                             filteredVenues.map((venue) => (
                                 <VenueCard key={venue.id} venue={venue} />
                             ))
@@ -107,3 +137,4 @@ const FindCourts = () => {
 };
 
 export default FindCourts;
+

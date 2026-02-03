@@ -1,7 +1,19 @@
 import React from 'react';
 import { MapPin, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { Venue } from '../data/mockData';
+// import type { Venue } from '../data/mockData';
+
+export interface Venue {
+    id: string; // or number
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    price: number;
+    sport: 'Padel' | 'Tennis' | 'Badminton';
+    image: string;
+    description?: string;
+}
 import './VenueCard.css';
 
 export const ImageWithFallback = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {

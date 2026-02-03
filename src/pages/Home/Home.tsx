@@ -1,24 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, Calendar, Search, ChevronRight } from 'lucide-react';
 import Navbar from '../../components/Layout/Navbar';
 import Footer from '../../components/Layout/Footer';
-import { venues } from '../../data/mockData';
 import { VenueCard } from '../../components/VenueCard';
 import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
 import './Home.css';
 
+interface Venue {
+    id: string; // or number
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    price: number;
+    sport: 'Padel' | 'Tennis' | 'Badminton';
+    image: string;
+    description?: string;
+}
+
 const Home = () => {
     const navigate = useNavigate();
+    const [venues, setVenues] = useState<Venue[]>([]);
+    const [loading, setLoading] = useState(true);
+
     const [searchQuery, setSearchQuery] = useState({
         location: '',
         date: '',
         sport: '',
     });
 
+    useEffect(() => {
+        const fetchVenues = async () => {
+            try {
+                const response = await fetch('/api/venues');
+                if (response.ok) {
+                    const data = await response.json();
+                    setVenues(data);
+                }
+            } catch (error) {
+                console.error("Error fetching venues:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVenues();
+    }, []);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        navigate('/find-courts');
+        // Pass search params to FindCourts via URL
+        const params = new URLSearchParams();
+        if (searchQuery.sport) params.append('sport', searchQuery.sport);
+        navigate(`/find-courts?${params.toString()}`);
     };
 
     const topRatedVenues = venues.filter(v => v.rating >= 4.7).slice(0, 3);
@@ -136,9 +171,13 @@ const Home = () => {
                     </div>
 
                     <div className="courts-grid">
-                        {topRatedVenues.map((venue) => (
-                            <VenueCard key={venue.id} venue={venue} />
-                        ))}
+                        {loading ? (
+                            <p>Loading top rated courts...</p>
+                        ) : (
+                            topRatedVenues.map((venue) => (
+                                <VenueCard key={venue.id} venue={venue} />
+                            ))
+                        )}
                     </div>
                 </section>
 

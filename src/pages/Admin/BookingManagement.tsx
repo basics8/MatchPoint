@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import './BookingManagement.css';
@@ -16,16 +17,37 @@ interface BookingData {
 
 const BookingManagement = () => {
     // Mock Data based on the image provided
-    const bookings: BookingData[] = [
-        { id: 'BK2601', userName: 'Alex Johnson', email: 'alex.johnson@email.com', dateTime: '2026-01-10 18:00', venue: 'Elite Padel Club - Court A', sport: 'Padel', amount: 65000, paymentStatus: 'Completed', status: 'Confirmed' },
-        { id: 'BK2602', userName: 'Sarah Williams', email: 'sarah.w@email.com', dateTime: '2026-01-11 14:00', venue: 'Metropolitan Tennis Center - Court 1', sport: 'Tennis', amount: 85000, paymentStatus: 'Completed', status: 'Confirmed' },
-        { id: 'BK2603', userName: 'Michael Chen', email: 'mchen@email.com', dateTime: '2026-01-09 20:00', venue: 'Urban Badminton Arena - Court 1', sport: 'Badminton', amount: 45000, paymentStatus: 'Pending', status: 'Pending' },
-        { id: 'BK2604', userName: 'Emma Davis', email: 'emma.d@email.com', dateTime: '2026-01-08 10:00', venue: 'Premier Tennis Academy - Court 1', sport: 'Tennis', amount: 95000, paymentStatus: 'Completed', status: 'Cancelled' },
-        { id: 'BK2605', userName: 'James Rodriguez', email: 'james.r@email.com', dateTime: '2026-01-12 16:00', venue: 'Riverside Padel Courts - Court A', sport: 'Padel', amount: 60000, paymentStatus: 'Completed', status: 'Confirmed' },
-        { id: 'BK2606', userName: 'Linda Martinez', email: 'linda.m@email.com', dateTime: '2026-01-13 19:00', venue: 'CityCenter Badminton Club - Court 1', sport: 'Badminton', amount: 40000, paymentStatus: 'Completed', status: 'Confirmed' },
-        { id: 'BK2607', userName: 'Robert Wilson', email: 'r.wilson@email.com', dateTime: '2026-01-14 09:00', venue: 'Skyline Badminton Arena - Court 3', sport: 'Badminton', amount: 45000, paymentStatus: 'Pending', status: 'Pending' },
-        { id: 'BK2608', userName: 'Patricia Moore', email: 'patricia.m@email.com', dateTime: '2026-01-15 15:00', venue: 'Grand Slam Tennis Club - Court 2', sport: 'Tennis', amount: 90000, paymentStatus: 'Completed', status: 'Confirmed' },
-    ];
+    const [bookings, setBookings] = useState<BookingData[]>([]);
+
+    useEffect(() => {
+        fetchBookings();
+    }, []);
+
+    const fetchBookings = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('/api/admin/bookings', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const mappedBookings: BookingData[] = data.map((b: any) => ({
+                    id: `BK${b.id}`,
+                    userName: b.user ? b.user.username : 'Unknown', // Handle potential null if user deleted
+                    email: '-', // User email not always in booking join unless we select it, simplified for now
+                    dateTime: `${b.date} ${b.time}`,
+                    venue: b.venue ? b.venue.name : 'Unknown Venue',
+                    sport: b.sport || 'Tennis',
+                    amount: b.totalPrice || 0,
+                    paymentStatus: 'Completed', // Hardcoded as DB doesn't have payment status yet
+                    status: b.status || 'Pending'
+                }));
+                setBookings(mappedBookings);
+            }
+        } catch (error) {
+            console.error("Error fetching bookings:", error);
+        }
+    };
 
     // Calculate stats
     const totalBookings = bookings.length;

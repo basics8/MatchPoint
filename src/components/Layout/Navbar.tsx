@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
+import { LayoutDashboard } from 'lucide-react';
 import './Layout.css';
 
 const Navbar = () => {
@@ -17,6 +18,25 @@ const Navbar = () => {
                     <span onClick={() => navigate('/dashboard')} className="nav-link" style={{ cursor: 'pointer' }}>Dashboard</span>
                 </div>
                 <div className="navbar-actions">
+                    {/* Admin Back Button */}
+                    {(() => {
+                        try {
+                            const userStr = localStorage.getItem('user');
+                            const user = userStr ? JSON.parse(userStr) : null;
+                            if (user?.roles === 'admin' || user?.roles?.includes('admin')) {
+                                return (
+                                    <button
+                                        className="admin-panel-btn"
+                                        onClick={() => navigate('/admin')}
+                                    >
+                                        <LayoutDashboard size={16} />
+                                        Admin Panel
+                                    </button>
+                                );
+                            }
+                        } catch (e) { return null; }
+                    })()}
+
                     <button className="profile-btn" onClick={() => navigate('/dashboard')}>
                         <FaUser className="profile-icon" /> Profile
                     </button>

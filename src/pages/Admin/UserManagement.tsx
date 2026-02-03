@@ -16,18 +16,36 @@ interface UserData {
 
 const UserManagement = () => {
     // Mock Data based on the image
-    const users: UserData[] = [
-        { id: '1', initials: 'SJ', name: 'Sarah Johnson', email: 'sarah.j@email.com', phone: '+1 (555) 123-4567', totalBookings: 24, totalSpent: 1620000, joinedDate: '2025-03-15' },
-        { id: '2', initials: 'MC', name: 'Mike Chen', email: 'mike.chen@email.com', phone: '+1 (555) 234-5678', totalBookings: 18, totalSpent: 1215000, joinedDate: '2025-04-22' },
-        { id: '3', initials: 'EW', name: 'Emma Wilson', email: 'emma.w@email.com', phone: '+1 (555) 345-6789', totalBookings: 32, totalSpent: 2160000, joinedDate: '2025-02-10' },
-        { id: '4', initials: 'DB', name: 'David Brown', email: 'david.b@email.com', phone: '+1 (555) 456-7890', totalBookings: 15, totalSpent: 1012500, joinedDate: '2025-05-18' },
-        { id: '5', initials: 'LA', name: 'Lisa Anderson', email: 'lisa.a@email.com', phone: '+1 (555) 567-8901', totalBookings: 27, totalSpent: 1822500, joinedDate: '2025-03-30' },
-        { id: '6', initials: 'JT', name: 'James Taylor', email: 'james.t@email.com', phone: '+1 (555) 678-9012', totalBookings: 21, totalSpent: 1417500, joinedDate: '2025-04-05' },
-        { id: '7', initials: 'MG', name: 'Maria Garcia', email: 'maria.g@email.com', phone: '+1 (555) 789-0123', totalBookings: 19, totalSpent: 1282500, joinedDate: '2025-05-12' },
-        { id: '8', initials: 'RK', name: 'Robert Kim', email: 'robert.k@email.com', phone: '+1 (555) 890-1234', totalBookings: 29, totalSpent: 1957500, joinedDate: '2025-02-28' },
-        { id: '9', initials: 'JL', name: 'Jennifer Lee', email: 'jennifer.l@email.com', phone: '+1 (555) 901-2345', totalBookings: 16, totalSpent: 1080000, joinedDate: '2025-06-01' },
-        { id: '10', initials: 'CM', name: 'Chris Martinez', email: 'chris.m@email.com', phone: '+1 (555) 012-3456', totalBookings: 22, totalSpent: 1485000, joinedDate: '2025-04-15' },
-    ];
+    const [users, setUsers] = useState<UserData[]>([]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('/api/admin/users', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const mappedUsers: UserData[] = data.map((u: any) => ({
+                    id: u.id,
+                    initials: u.username.substring(0, 2).toUpperCase(),
+                    name: u.username, // Using username as name
+                    email: u.email,
+                    phone: '-', // Placeholder as not in DB
+                    totalBookings: 0, // Placeholder
+                    totalSpent: 0, // Placeholder
+                    joinedDate: u.createdAt ? new Date(u.createdAt).toISOString().split('T')[0] : '-'
+                }));
+                setUsers(mappedUsers);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
 
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);

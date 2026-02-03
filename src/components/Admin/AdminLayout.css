@@ -67,6 +67,31 @@
 .sidebar-footer {
     padding: 24px;
     border-top: 1px solid #1f2937;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.view-site-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #1f2937;
+    color: #e5e7eb;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.view-site-btn:hover {
+    background-color: #374151;
+    color: white;
+    border-color: #4b5563;
 }
 
 .admin-profile {
